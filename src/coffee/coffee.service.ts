@@ -1,5 +1,10 @@
 import { Coffee } from './entities/coffee.entity';
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 // server 是数据交互的方法
 @Injectable()
 export class CoffeeService {
@@ -15,7 +20,16 @@ export class CoffeeService {
     return this.coffees;
   }
   findOne(id: string) {
-    return this.coffees.find((coffee) => coffee.id == +id);
+    const coffee = this.coffees.find((coffee) => coffee.id == +id);
+    if (!coffee) {
+      //{
+      //     "statusCode": 404,
+      //     "message": "Coffee #10 not found"
+      // }
+      // throw new HttpException(`Coffee #${id} not found`, HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`Coffee #${id} not found`);
+    }
+    return coffee;
   }
   create(createCoffeeDto: any) {
     this.coffees.push(createCoffeeDto);
