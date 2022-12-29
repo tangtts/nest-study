@@ -1,3 +1,5 @@
+import { UpdateCoffeeDto } from './dto/update-coffee.dto';
+import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { CoffeeService } from './coffee.service';
 import {
   Body,
@@ -46,8 +48,8 @@ export class CoffeeController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  createOne(@Body() body) {
-    return this.coffeesService.create(body);
+  createOne(@Body() createDto: CreateCoffeeDto) {
+    return this.coffeesService.create(createDto);
   }
 
   @Delete(':id')
@@ -55,7 +57,7 @@ export class CoffeeController {
     return this.coffeesService.remove(id);
   }
   @Patch(':id')
-  update(@Param('id') id: string) {
-    return this.coffeesService.update(id);
+  update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto) {
+    return this.coffeesService.update(id, updateCoffeeDto);
   }
 }

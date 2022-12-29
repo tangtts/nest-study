@@ -1,3 +1,5 @@
+import { UpdateCoffeeDto } from './dto/update-coffee.dto';
+import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { Coffee } from './entities/coffee.entity';
 import {
   HttpException,
@@ -31,15 +33,27 @@ export class CoffeeService {
     }
     return coffee;
   }
-  create(createCoffeeDto: any) {
-    this.coffees.push(createCoffeeDto);
-    return this.coffees;
+
+  create(createCoffeeDto: CreateCoffeeDto) {
+    this.coffees.push({
+      ...createCoffeeDto,
+      id: Math.round(Math.random() * 10),
+    });
+    return createCoffeeDto;
   }
-  update(id: string) {
+
+  update(id: string, updateCoffeeDto: UpdateCoffeeDto) {
     const coffeeIndex = this.coffees.findIndex((coffee) => coffee.id == +id);
     if (coffeeIndex >= 0) {
-      // this.coffees.splice(coffeeIndex, 1);
+      this.coffees = this.coffees.map((coffee) => {
+        if (coffee.id == +id) {
+          return { ...coffee, ...updateCoffeeDto };
+        } else {
+          return coffee;
+        }
+      });
     }
+    return this.coffees;
   }
   remove(id: string) {
     const coffeeIndex = this.coffees.findIndex((coffee) => coffee.id == +id);
