@@ -21,8 +21,8 @@ export class CoffeeService {
   findAll() {
     return this.coffees;
   }
-  findOne(id: string) {
-    const coffee = this.coffees.find((coffee) => coffee.id == +id);
+  findOne(id: number) {
+    const coffee = this.coffees.find((coffee) => coffee.id == id);
     if (!coffee) {
       //{
       //     "statusCode": 404,

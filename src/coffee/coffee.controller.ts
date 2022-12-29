@@ -37,7 +37,8 @@ export class CoffeeController {
   // }
   // http://localhost:3000/coffee/20
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
+    console.log(typeof id);
     return this.coffeesService.findOne(id);
   }
 
@@ -49,6 +50,7 @@ export class CoffeeController {
   @Post()
   @HttpCode(HttpStatus.OK)
   createOne(@Body() createDto: CreateCoffeeDto) {
+    // console.log(createDto instanceof CreateCoffeeDto);
     return this.coffeesService.create(createDto);
   }
 

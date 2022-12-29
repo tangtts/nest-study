@@ -9,6 +9,8 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      // 可以做类型转化
+      transform: true,
       // forbidNonWhitelisted: true,
     }),
   );
