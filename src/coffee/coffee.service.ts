@@ -7,9 +7,15 @@ import {
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
+import { Model } from 'mongoose';
+import { CoffeeDocument } from './schema/coffee.schema';
+import { InjectModel } from '@nestjs/mongoose';
 // server 是数据交互的方法
 @Injectable()
 export class CoffeeService {
+  constructor(
+    @InjectModel('Users') private CoffeeModel: Model<CoffeeDocument>,
+  ) {}
   private coffees: Coffee[] = [
     {
       id: 1,
@@ -18,7 +24,9 @@ export class CoffeeService {
       flavors: ['chocolate', 'vanilla'],
     },
   ];
-  findAll() {
+  async findAll() {
+    const temp = await this.CoffeeModel.find().exec();
+    return temp;
     return this.coffees;
   }
   findOne(id: number) {
@@ -34,12 +42,18 @@ export class CoffeeService {
     return coffee;
   }
 
-  create(createCoffeeDto: CreateCoffeeDto) {
-    this.coffees.push({
+  async create(createCoffeeDto: CreateCoffeeDto) {
+    // this.coffees.push({
+    //   ...createCoffeeDto,
+    //   id: Math.round(Math.random() * 10),
+    // });
+    // return createCoffeeDto;
+    const createUser = new this.CoffeeModel({
       ...createCoffeeDto,
       id: Math.round(Math.random() * 10),
     });
-    return createCoffeeDto;
+    const temp = await createUser.save();
+    return temp;
   }
 
   update(id: string, updateCoffeeDto: UpdateCoffeeDto) {
