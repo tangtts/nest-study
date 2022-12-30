@@ -7,7 +7,7 @@ import {
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model,Types } from 'mongoose';
 import { CoffeeDocument } from './schema/coffee.schema';
 import { InjectModel } from '@nestjs/mongoose';
 // server 是数据交互的方法
@@ -56,7 +56,9 @@ export class CoffeeService {
     return temp;
   }
 
-  update(id: string, updateCoffeeDto: UpdateCoffeeDto) {
+ async update(id: string, updateCoffeeDto: UpdateCoffeeDto) {
+    await this.CoffeeModel.updateOne({ id },{$set: updateCoffeeDto })
+    return 
     const coffeeIndex = this.coffees.findIndex((coffee) => coffee.id == +id);
     if (coffeeIndex >= 0) {
       this.coffees = this.coffees.map((coffee) => {
@@ -69,7 +71,9 @@ export class CoffeeService {
     }
     return this.coffees;
   }
-  remove(id: string) {
+ async remove(id: string): Promise<any> {
+   let r = await this.CoffeeModel.deleteOne({ id })
+    return r
     const coffeeIndex = this.coffees.findIndex((coffee) => coffee.id == +id);
     if (coffeeIndex >= 0) {
       this.coffees.splice(coffeeIndex, 1);

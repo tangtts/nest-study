@@ -48,17 +48,26 @@ export class CoffeeController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  createOne(@Body() createDto: CreateCoffeeDto) {
+  createOne(@Body() createDto: CreateCoffeeDto,@Res() response:Response) {
     // console.log(createDto instanceof CreateCoffeeDto);
-    return this.coffeesService.create(createDto);
+    this.coffeesService.create(createDto);
+    return response.status(200).send({ msg:'success' })
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coffeesService.remove(id);
+ async remove(@Param('id') id: string, @Res() response:Response) {
+   let r = await this.coffeesService.remove(id);
+   console.log(r.deletedCount)
+   if(r.deletedCount == 1){
+     return response.status(200).send({ msg:'success' })
+   }else {
+    return response.status(200).send({ msg:'已经删除掉' })
+   }
   }
+
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto) {
-    return this.coffeesService.update(id, updateCoffeeDto);
+  update(@Param('id') id: string, @Body() updateCoffeeDto: UpdateCoffeeDto,@Res() response:Response) {
+    this.coffeesService.update(id, updateCoffeeDto);
+    return response.status(200).send({ msg:'success' })
   }
 }
