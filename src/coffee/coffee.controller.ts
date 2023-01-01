@@ -12,9 +12,10 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   Res,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Response,Request } from 'express';
 @Controller('coffee')
 export class CoffeeController {
   constructor(private readonly coffeesService: CoffeeService) {}
@@ -46,9 +47,9 @@ export class CoffeeController {
     return `find one ${query.id} query coffees`;
   }
 
-  @Post()
+  @Post('createOne')
   @HttpCode(HttpStatus.OK)
-  createOne(@Body() createDto: CreateCoffeeDto,@Res() response:Response) {
+  createOne(@Body() createDto: CreateCoffeeDto,@Res() response:Response,@Req() req:Request) {
     // console.log(createDto instanceof CreateCoffeeDto);
     this.coffeesService.create(createDto);
     return response.status(200).send({ msg:'success' })
@@ -57,7 +58,6 @@ export class CoffeeController {
   @Delete(':id')
  async remove(@Param('id') id: string, @Res() response:Response) {
    let r = await this.coffeesService.remove(id);
-   console.log(r.deletedCount)
    if(r.deletedCount == 1){
      return response.status(200).send({ msg:'success' })
    }else {

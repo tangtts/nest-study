@@ -7,14 +7,14 @@ import {
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
-import { Model,Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { CoffeeDocument } from './schema/coffee.schema';
 import { InjectModel } from '@nestjs/mongoose';
 // server 是数据交互的方法
 @Injectable()
 export class CoffeeService {
   constructor(
-    @InjectModel('Users') private CoffeeModel: Model<CoffeeDocument>,
+    @InjectModel('coffees') private CoffeeModel: Model<CoffeeDocument>,
   ) {}
   private coffees: Coffee[] = [
     {
@@ -29,7 +29,8 @@ export class CoffeeService {
     return temp;
     return this.coffees;
   }
-  findOne(id: number) {
+ async findOne(id: number) {
+    return this.CoffeeModel.find({ id })
     const coffee = this.coffees.find((coffee) => coffee.id == id);
     if (!coffee) {
       //{
@@ -71,6 +72,7 @@ export class CoffeeService {
     }
     return this.coffees;
   }
+  
  async remove(id: string): Promise<any> {
    let r = await this.CoffeeModel.deleteOne({ id })
     return r
