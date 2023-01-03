@@ -3,36 +3,17 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserDocument } from 'src/users/schema/user.schema';
 import { CreateUserDto } from './dto/create-users.dto';
-// import { JwtService } from '@nestjs/jwt'
-// import { AuthGuard } from '@nestjs/passport';
+import { JwtService } from '@nestjs/jwt'
+import { AuthGuard } from '@nestjs/passport';
 @Injectable()
 export class UsersService {
-  private readonly users: any[];
   constructor(
     @InjectModel('users') private UserModel: Model<UserDocument>,
-    ) {
-      this.users = [
-        {
-          userId: 1,
-          username: 'john',
-          password: 'changeme',
-        },
-        {
-          userId: 2,
-          username: 'chris',
-          password: 'secret',
-        },
-        {
-          userId: 3,
-          username: 'maria',
-          password: 'guess',
-        },
-      ];
-    }
+    private jwtService: JwtService
+    ) {}
 
   async findOne(username: string):Promise<any> {
-    return this.users.find(user => user.username === username);
-    // return this.UserModel.findOne({ username })
+    return this.UserModel.findOne({ username })
   }
   
   async createOne(createUserDto: CreateUserDto) {
@@ -41,13 +22,11 @@ export class UsersService {
     return temp;
   }
 
-  // @UseGuards(AuthGuard('local'))
+  @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(user:CreateUserDto) {
-    return {}
-    // const payload = { username: user.username, password: user.password };
-    // return {
-    //   access_token: this.jwtService.sign(payload),
-    // };
+    const payload = { username: user.username, password: user.password,rePassword:user.rePassword };
+   let r =  this.jwtService.sign(payload.username+payload.password,{secret:"abcd"})
+    return r;
   }
 }

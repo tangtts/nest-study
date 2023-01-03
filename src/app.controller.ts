@@ -9,7 +9,6 @@ export class AppController {
   constructor(
     private readonly authService: AuthService) {}
 
-  // @UseGuards(LocalAuthGuard)
   @UseGuards(AuthGuard('local'))
   @Post('auth/login')
   login(@Request() req) {
