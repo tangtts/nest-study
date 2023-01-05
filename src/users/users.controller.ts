@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
   Res,
+  Header,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { CreateUserDto } from './dto/create-users.dto';

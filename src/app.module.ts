@@ -7,7 +7,9 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
-  imports: [CoffeeModule, MongooseModule.forRoot('mongodb://localhost/Nest'), AuthModule, UsersModule],
+  imports: [CoffeeModule, 
+    MongooseModule.forRoot('mongodb://localhost/Nest'), 
+    AuthModule, UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })

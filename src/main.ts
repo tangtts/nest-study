@@ -1,3 +1,4 @@
+import { logger,LoggerMiddleware } from 'src/middleware/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -15,6 +16,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalInterceptors(new TransformInterceptor());
+  app.use(logger,new LoggerMiddleware().use)
   await app.listen(3000);
 }
 bootstrap();
