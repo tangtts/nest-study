@@ -3,6 +3,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { TransformInterceptor } from './interceptor/transform.interceptor';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { ParseIntPipe } from './pipes/parse-int.pipe';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // 可以验证传入的值的类型，
@@ -16,6 +18,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalInterceptors(new TransformInterceptor());
+  // app.useGlobalFilters(new HttpExceptionFilter());
   app.use(logger,new LoggerMiddleware().use)
   await app.listen(3000);
 }

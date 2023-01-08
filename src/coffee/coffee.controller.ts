@@ -9,13 +9,16 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
   Req,
   Res,
+  UsePipes,
 } from '@nestjs/common';
 import { Response,Request } from 'express';
+// import { ParseIntPipe } from 'src/pipes/parse-int.pipe';
 @Controller('coffee')
 export class CoffeeController {
   constructor(private readonly coffeesService: CoffeeService) {}
@@ -37,14 +40,16 @@ export class CoffeeController {
   //   return `find one ${params.id} coffee`;
   // }
   // http://localhost:3000/coffee/20
-  @Get(':id')
+  @Get('/find/:id')
   findOne(@Param('id') id: number) {
     return this.coffeesService.findOne(id);
   }
 
   @Get('query')
-  findQueryOne(@Query() query) {
-    return `find one ${query.id} query coffees`;
+  // @UsePipes(ParseIntPipe)
+  findQueryOne(@Query("id",ParseIntPipe) query) {
+    console.log(query)
+    return `find one query coffees`;
   }
 
   @Post('createOne')

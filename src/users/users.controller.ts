@@ -11,15 +11,21 @@ import {
   HttpStatus,
   Res,
   Header,
+  UseFilters,
+  ForbiddenException,
+  UsePipes,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { CreateUserDto } from './dto/create-users.dto';
+import { RegisterUserDto } from './dto/register-users.dto';
 import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { createWriteStream } from 'fs';
 import  { join,normalize } from 'path';
 import * as OSS from 'ali-oss';
+import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
+import { ValidationPipe } from './pipe/validate.pipe';
+import { LoginUserDto } from './dto/login-users.dto';
 @Controller('users')
 export class UsersController {
   private client: OSS;
@@ -33,12 +39,13 @@ export class UsersController {
   }
 
   @Post('register')
-  async register(@Body() param: CreateUserDto): Promise<any> {
+  async register(@Body() param: RegisterUserDto): Promise<any> {
     return this.userService.createOne(param);
   }
-
+  // @UseFilters(HttpExceptionFilter)
   @Post('login')
-  async login(@Body() param: CreateUserDto): Promise<any> {
+  @UsePipes(ValidationPipe)
+  async login(@Body(new ValidationPipe()) param: LoginUserDto): Promise<any> {
     return this.userService.login(param);
   }
 

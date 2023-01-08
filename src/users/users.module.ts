@@ -1,20 +1,32 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod, Post } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+  Post,
+} from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from 'src/users/schema/user.schema';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { logger, LoggerMiddleware } from 'src/middleware/logger.middleware';
+import { APP_PIPE } from '@nestjs/core';
+import { ValidationPipe } from './pipe/validate.pipe';
 
 @Module({
- imports:[ 
+  imports: [
     MongooseModule.forFeature([{ name: 'users', schema: UserSchema }]),
-    JwtModule.register({ secret: 'hard!to-guess_secret' })],
+    JwtModule.register({ secret: 'hard!to-guess_secret' }),
+  ],
   exports: [UsersService],
   controllers: [UsersController],
-  providers: [UsersService]
+  providers: [
+    UsersService,
+    
+  ],
 })
-export class UsersModule implements NestModule{
+export class UsersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     // 可以写入一个类
     // consumer.apply(logger).forRoutes(UsersController)
@@ -22,6 +34,5 @@ export class UsersModule implements NestModule{
     // consumer.apply(logger).forRoutes("users")
     // consumer.apply(logger,LoggerMiddleware).forRoutes("users")
     // consumer.apply(logger,LoggerMiddleware).forRoutes({path:"users/*",method:RequestMethod.POST})
-
   }
 }
