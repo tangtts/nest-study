@@ -15,11 +15,14 @@ import {
   Query,
   Req,
   Res,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { Response,Request } from 'express';
+import { LoggingInterceptor } from 'src/interceptor/logging.interceptor';
 // import { ParseIntPipe } from 'src/pipes/parse-int.pipe';
 @Controller('coffee')
+@UseInterceptors(new LoggingInterceptor())
 export class CoffeeController {
   constructor(private readonly coffeesService: CoffeeService) {}
   @Get()
@@ -47,8 +50,8 @@ export class CoffeeController {
 
   @Get('query')
   // @UsePipes(ParseIntPipe)
+  // 管道
   findQueryOne(@Query("id",ParseIntPipe) query) {
-    console.log(query)
     return `find one query coffees`;
   }
 

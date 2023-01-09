@@ -1,3 +1,4 @@
+import { LoggingInterceptor } from 'src/interceptor/logging.interceptor';
 import { logger,LoggerMiddleware } from 'src/middleware/logger.middleware';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
@@ -17,7 +18,7 @@ async function bootstrap() {
       // forbidNonWhitelisted: true,
     }),
   );
-  app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalInterceptors(new TransformInterceptor(),new LoggingInterceptor());
   // app.useGlobalFilters(new HttpExceptionFilter());
   app.use(logger,new LoggerMiddleware().use)
   await app.listen(3000);
